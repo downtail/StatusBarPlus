@@ -48,6 +48,7 @@ class AndroidBug5497Workaround {
         Rect r = new Rect();
         mChildOfContent.getWindowVisibleDisplayFrame(r);
         return r.bottom;
+//        return r.bottom + StatusBarPlus.getNavigationBarHeight(activity);
 //        return (r.bottom - r.top);// 全屏模式下： return r.bottom
     }
 }

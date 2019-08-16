@@ -1,5 +1,6 @@
 package com.downtail.statusbarplus;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,14 +38,14 @@ public class PageFragment extends Fragment {
 
         tvBtn = view.findViewById(R.id.tv_btn);
         statusView=view.findViewById(R.id.status_view);
-        statusView.getLayoutParams().height=StatusBarPlus.getStatusBarHeight(getContext());
+        StatusBarPlus.setColor(statusView,Color.YELLOW);
 
         int index = getArguments().getInt("index");
         tvBtn.setText("click" + index);
         tvBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(getActivity(),OtherActivity.class));
             }
         });
         return view;

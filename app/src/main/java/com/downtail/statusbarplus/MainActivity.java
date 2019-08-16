@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.downtail.plus.AndroidBug5497Workaround;
 import com.downtail.plus.StatusBarPlus;
 
 import java.util.ArrayList;
@@ -25,9 +24,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         StatusBarPlus.setTransparent(this);
+//        StatusBarPlus.setStatusBarMode(this,true);
 //        StatusBarPlus.setColor(this, Color.parseColor("#18ce94"));
 
-        vpContainer=findViewById(R.id.vp_container);
+        vpContainer = findViewById(R.id.vp_container);
         vpContainer.setOffscreenPageLimit(4);
         vpContainer.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()){
+                switch (menuItem.getItemId()) {
                     case R.id.item1:
                         vpContainer.setCurrentItem(0);
                         break;
@@ -68,11 +68,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        List<Fragment> fragments=new ArrayList<>();
-        for (int i=0;i<bottomNavigationView.getMenu().size();i++){
+        List<Fragment> fragments = new ArrayList<>();
+        for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
             fragments.add(PageFragment.newInstance(i));
         }
-        FragmentAdapter adapter=new FragmentAdapter(getSupportFragmentManager(),fragments);
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), fragments);
         vpContainer.setAdapter(adapter);
     }
 }
