@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.downtail.plus.StatusBarPlus;
 
@@ -18,14 +19,16 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     ViewPager vpContainer;
+    View fakeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        StatusBarPlus.setTransparent(this);
-//        StatusBarPlus.setStatusBarMode(this,true);
-//        StatusBarPlus.setColor(this, Color.parseColor("#18ce94"));
+        fakeView=findViewById(R.id.view_fake);
+//        StatusBarPlus.setTransparent(this);
+        StatusBarPlus.setTransparentAboveLollipop(this,fakeView);
+//        StatusBarPlus.setColor(this, Color.parseColor("#18ce94"),64);
 
         vpContainer = findViewById(R.id.vp_container);
         vpContainer.setOffscreenPageLimit(4);

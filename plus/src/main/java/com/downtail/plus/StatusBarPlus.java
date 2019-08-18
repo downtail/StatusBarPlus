@@ -42,7 +42,7 @@ public class StatusBarPlus {
      * @param context
      * @return
      */
-    public static int getNavigationBarHeight(Context context) {
+    private static int getNavigationBarHeight(Context context) {
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
         return resources.getDimensionPixelSize(resourceId);
@@ -101,11 +101,24 @@ public class StatusBarPlus {
     }
 
     /**
-     * 设置状态栏颜色API19(4.4)
+     * setTranslucent API19(4.4)
      */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private static void setTranslucentAboveKitkat(Activity activity) {
         Window window = activity.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+    }
+
+    /**
+     * setTranslucent API21(5.0)
+     *
+     * @param activity
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static void setTranslucentAboveLollipop(Activity activity) {
+        Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(Color.TRANSPARENT);
     }
 
     /**
@@ -125,6 +138,7 @@ public class StatusBarPlus {
      *
      * @param activity
      */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void setTransparent(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setTranslucentAboveLollipop(activity);
@@ -132,13 +146,44 @@ public class StatusBarPlus {
             setTranslucentAboveKitkat(activity);
             removeStatusBar(activity);
         }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            Window window = activity.getWindow();
-//            WindowManager.LayoutParams attributes = window.getAttributes();
-//            attributes.flags = attributes.flags & ~WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = activity.getWindow();
+            WindowManager.LayoutParams attributes = window.getAttributes();
+            attributes.flags = attributes.flags & ~WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+        }
         AndroidBug5497Workaround.assistActivity(activity);
     }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static void setTransparentIgnoreNavigation(Activity activity) {
+        setTransparentIgnoreNavigation(activity, 0);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static void setTransparentIgnoreNavigation(Activity activity, int alpha) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            setTransparentAboveLollipop(activity);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentAboveKitkat(activity);
+            removeStatusBar(activity);
+        }
+        addTranslucentView(activity, alpha);
+        AndroidBug5497Workaround.assistActivity(activity);
+    }
+
+    private static void addTranslucentView(Activity activity, int alpha) {
+        ViewGroup viewGroup = (ViewGroup) activity.getWindow().getDecorView();
+        int childCount = viewGroup.getChildCount();
+        if (childCount > 0 && viewGroup.getChildAt(childCount - 1) instanceof StatusBarView) {
+            viewGroup.getChildAt(childCount - 1).setVisibility(View.VISIBLE);
+            viewGroup.getChildAt(childCount - 1).setBackgroundColor(calculateStatusColor(Color.argb(alpha, 0, 0, 0), alpha));
+        } else {
+            StatusBarView statusBarView = createStatusBarView(activity, Color.argb(alpha, 0, 0, 0), 0);
+            viewGroup.addView(statusBarView);
+        }
+    }
+
+    private static final int TAG_KEY_HAVE_SET_OFFSET = -123;
 
     /**
      * 延伸到状态栏(API5.0)
@@ -146,15 +191,28 @@ public class StatusBarPlus {
      * @param activity
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static void setTranslucentAboveLollipop(Activity activity) {
+    public static void setTransparentAboveLollipop(Activity activity,View needOffsetView) {
 //        Window window = activity.getWindow();
-//        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //        window.setStatusBarColor(Color.TRANSPARENT);
-
-        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+        activity.getWindow()
+                .getDecorView()
+                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        addStatusBar(activity,Color.WHITE,0);
+        if (needOffsetView != null) {
+            Object haveSetOffset = needOffsetView.getTag(TAG_KEY_HAVE_SET_OFFSET);
+            if (haveSetOffset != null && (Boolean) haveSetOffset) {
+                return;
+            }
+            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) needOffsetView.getLayoutParams();
+            layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin + getStatusBarHeight(activity),
+                    layoutParams.rightMargin, layoutParams.bottomMargin);
+            needOffsetView.setTag(TAG_KEY_HAVE_SET_OFFSET, true);
+
+        }
 //        ViewGroup rootView = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
 //        if (rootView != null) {
 ////            rootView.setFitsSystemWindows(fitsSystemWindows);
@@ -174,6 +232,7 @@ public class StatusBarPlus {
         if (childCount > 0 && viewGroup.getChildAt(childCount - 1) instanceof StatusBarView) {
             viewGroup.getChildAt(childCount - 1).setVisibility(View.GONE);
         }
+        autoFitsSystemWindows(activity, false);
     }
 
     /**
@@ -183,7 +242,7 @@ public class StatusBarPlus {
      * @param color
      */
     private static void addStatusBar(Activity activity, int color, int alpha) {
-        ViewGroup viewGroup = (ViewGroup) activity.getWindow().getDecorView();
+        ViewGroup viewGroup = (ViewGroup)activity.findViewById(android.R.id.content);
         int childCount = viewGroup.getChildCount();
         if (childCount > 0 && viewGroup.getChildAt(childCount - 1) instanceof StatusBarView) {
             viewGroup.getChildAt(childCount - 1).setVisibility(View.VISIBLE);
@@ -192,7 +251,7 @@ public class StatusBarPlus {
             StatusBarView statusBarView = createStatusBarView(activity, color, alpha);
             viewGroup.addView(statusBarView);
         }
-        autoFitsSystemWindows(activity, true);
+//        autoFitsSystemWindows(activity, true);
     }
 
     private static void autoFitsSystemWindows(Activity activity, boolean fitsSystemWindows) {
@@ -215,7 +274,7 @@ public class StatusBarPlus {
         StatusBarView statusBarView = new StatusBarView(activity);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(activity));
         statusBarView.setLayoutParams(layoutParams);
-        statusBarView.setBackgroundColor(calculateStatusColor(color, alpha));
+        statusBarView.setBackgroundColor(Color.argb(alpha, 0, 0, 0));
         return statusBarView;
     }
 

@@ -2,25 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_container"
+    <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/nav_bottom"
-        android:layout_alignParentTop="true" />
+        android:id="@+id/view_fake"/>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/nav_bottom"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:menu="@menu/nav_bottom_menu"
-        android:background="?android:attr/windowBackground"
-        android:layoutDirection="ltr"
-        app:itemTextColor="@color/nav_bottom_color"
-        app:itemIconSize="14sp"
-        app:labelVisibilityMode="labeled"/>
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/nav_bottom"
+            android:layout_alignParentTop="true" />
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/nav_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/nav_bottom_menu"
+            android:background="?android:attr/windowBackground"
+            android:layoutDirection="ltr"
+            app:itemTextColor="@color/nav_bottom_color"
+            app:itemIconSize="14sp"
+            app:labelVisibilityMode="labeled"/>
+
+    </RelativeLayout>
+
+
+
 
 </RelativeLayout>
