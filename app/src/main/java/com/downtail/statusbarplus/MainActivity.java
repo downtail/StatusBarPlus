@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         fakeView=findViewById(R.id.view_fake);
 //        StatusBarPlus.setTransparent(this);
         StatusBarPlus.setTransparentAboveLollipop(this,fakeView);
-//        StatusBarPlus.setColor(this, Color.parseColor("#18ce94"),64);
+        StatusBarPlus.setTransparentWithSystemBar(this);
+//        StatusBarPlus.setColor(this, Color.parseColor("#18ce94"));
 
         vpContainer = findViewById(R.id.vp_container);
         vpContainer.setOffscreenPageLimit(4);
