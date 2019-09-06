@@ -37,15 +37,15 @@ public class PageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
 
         tvBtn = view.findViewById(R.id.tv_btn);
-        statusView=view.findViewById(R.id.status_view);
-        StatusBarPlus.setColor(statusView,Color.YELLOW);
+        statusView = view.findViewById(R.id.status_view);
+        StatusBarPlus.setColor(statusView, Color.YELLOW);
 
         int index = getArguments().getInt("index");
         tvBtn.setText("click" + index);
         tvBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(),OtherActivity.class));
+                startActivity(new Intent(getActivity(), OtherActivity.class));
             }
         });
         return view;

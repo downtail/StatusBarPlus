@@ -1,6 +1,5 @@
 package com.downtail.statusbarplus;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -25,11 +24,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fakeView=findViewById(R.id.view_fake);
-//        StatusBarPlus.setTransparent(this);
-        StatusBarPlus.setTransparentAboveLollipop(this,fakeView);
-        StatusBarPlus.setTransparentWithSystemBar(this);
-//        StatusBarPlus.setColor(this, Color.parseColor("#18ce94"));
+        fakeView = findViewById(R.id.view_fake);
+        StatusBarPlus.setTransparent(this);
 
         vpContainer = findViewById(R.id.vp_container);
         vpContainer.setOffscreenPageLimit(4);
