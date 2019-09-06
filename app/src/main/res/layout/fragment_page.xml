@@ -8,24 +8,36 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#ff0000"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
-    <ImageView
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#ca9041"
-        android:layout_below="@+id/status_view"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/status_view">
 
-    <TextView
-        android:id="@+id/tv_btn"
-        android:layout_width="60dp"
-        android:layout_height="30dp"
-        android:layout_centerInParent="true"
-        android:text="click" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="#ca9041" />
+
+            <TextView
+                android:id="@+id/tv_btn"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:text="click" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true" />
+
+        </RelativeLayout>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </RelativeLayout>
