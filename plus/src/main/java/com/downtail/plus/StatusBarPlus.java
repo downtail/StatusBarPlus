@@ -64,8 +64,8 @@ public class StatusBarPlus {
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTransparentAboveKitkat(activity);
             showStatusBarView(activity, calculateStatusColor(color, alpha));
-            autoFitsSystemWindows(activity, true);
         }
+        autoFitsSystemWindows(activity, true);
     }
 
     public static void setColor(View statusBarView, int color) {
@@ -103,28 +103,15 @@ public class StatusBarPlus {
             statusBarView.setLayoutParams(layoutParams);
             decorView.addView(statusBarView);
         }
-        statusBarView.setVisibility(View.VISIBLE);
         statusBarView.setBackgroundColor(color);
-    }
-
-    private static void hideStatusBarView(Activity activity) {
-        Window window = activity.getWindow();
-        ViewGroup decorView = (ViewGroup) window.getDecorView();
-        View statusBarView = decorView.findViewWithTag(STATUS_BAR_VIEW_TAG);
-        if (statusBarView == null) {
-            statusBarView = new View(window.getContext());
-            statusBarView.setTag(STATUS_BAR_VIEW_TAG);
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(window.getContext()));
-            layoutParams.gravity = Gravity.TOP;
-            statusBarView.setLayoutParams(layoutParams);
-            decorView.addView(statusBarView);
-        }
-        statusBarView.setVisibility(View.GONE);
     }
 
     private static void autoFitsSystemWindows(Activity activity, boolean fitsSystemWindows) {
         ViewGroup rootView = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
-        rootView.setFitsSystemWindows(fitsSystemWindows);
+        if (rootView != null) {
+            rootView.setFitsSystemWindows(fitsSystemWindows);
+
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -172,9 +159,9 @@ public class StatusBarPlus {
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTransparentAboveKitkat(activity);
             showStatusBarView(activity, Color.argb(alpha, 0, 0, 0));
-            autoFitsSystemWindows(activity, false);
             AndroidBug5497Workaround.assistActivity(activity);
         }
+        autoFitsSystemWindows(activity, false);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -303,9 +290,9 @@ public class StatusBarPlus {
         Window window = activity.getWindow();
         View decor = window.getDecorView();
         if (darkMode) {
-            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         } else {
-            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
     }
 
