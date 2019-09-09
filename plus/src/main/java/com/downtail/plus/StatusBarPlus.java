@@ -54,35 +54,28 @@ public class StatusBarPlus {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void setColor(Activity activity, int color) {
-        setColor(activity, color, 0);
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void setColor(Activity activity, int color, int alpha) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setColorAboveLollipop(activity, color, alpha);
+//            setColorAboveLollipop(activity,Color.TRANSPARENT);
+            setTransparentAboveLollipop(activity, Color.TRANSPARENT);
+            showStatusBarView(activity, color);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTransparentAboveKitkat(activity);
-            showStatusBarView(activity, calculateStatusColor(color, alpha));
+            showStatusBarView(activity, color);
         }
         autoFitsSystemWindows(activity, true);
     }
 
     public static void setColor(View statusBarView, int color) {
-        setColor(statusBarView, color, 0);
-    }
-
-    public static void setColor(View statusBarView, int color, int alpha) {
         statusBarView.getLayoutParams().height = getStatusBarHeight(statusBarView.getContext());
-        statusBarView.setBackgroundColor(calculateStatusColor(color, alpha));
+        statusBarView.setBackgroundColor(color);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static void setColorAboveLollipop(Activity activity, int color, int alpha) {
+    private static void setColorAboveLollipop(Activity activity, int color) {
         Window window = activity.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(calculateStatusColor(color, alpha));
+        window.setStatusBarColor(color);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -93,7 +86,8 @@ public class StatusBarPlus {
 
     private static void showStatusBarView(Activity activity, int color) {
         Window window = activity.getWindow();
-        ViewGroup decorView = (ViewGroup) window.getDecorView();
+        ViewGroup decorView = activity.findViewById(android.R.id.content);
+//        ViewGroup decorView = (ViewGroup) window.getDecorView();
         View statusBarView = decorView.findViewWithTag(STATUS_BAR_VIEW_TAG);
         if (statusBarView == null) {
             statusBarView = new View(window.getContext());
@@ -110,21 +104,30 @@ public class StatusBarPlus {
         ViewGroup rootView = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
         if (rootView != null) {
             rootView.setFitsSystemWindows(fitsSystemWindows);
-
         }
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void setTransparent(Activity activity) {
-        setTransparent(activity, true);
+        setTransparent(activity, Color.argb(0, 0, 0, 0), true);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void setTransparent(Activity activity, boolean pure) {
+        setTransparent(activity, Color.argb(0, 0, 0, 0), pure);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static void setTransparent(Activity activity, int color) {
+        setTransparent(activity, color, true);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static void setTransparent(Activity activity, int color, boolean pure) {
         if (pure) {
-            setTransparentWithoutInput(activity, 0);
+            setTransparentWithoutInput(activity, color);
         } else {
-            setTransparentWithInput(activity, 0);
+            setTransparentWithInput(activity, color);
         }
     }
 
@@ -135,43 +138,45 @@ public class StatusBarPlus {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void setTranslucent(Activity activity, boolean pure) {
-        setTranslucent(activity, 127, pure);
+        setTranslucent(activity, Color.argb(127, 0, 0, 0), pure);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void setTranslucent(Activity activity, int alpha) {
-        setTranslucent(activity, alpha, true);
+    public static void setTranslucent(Activity activity, int color) {
+        setTranslucent(activity, color, true);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void setTranslucent(Activity activity, int alpha, boolean pure) {
+    public static void setTranslucent(Activity activity, int color, boolean pure) {
         if (pure) {
-            setTransparentWithoutInput(activity, alpha);
+            setTransparentWithoutInput(activity, color);
         } else {
-            setTransparentWithInput(activity, alpha);
+            setTransparentWithInput(activity, color);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private static void setTransparentWithoutInput(Activity activity, int alpha) {
+    private static void setTransparentWithoutInput(Activity activity, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setTransparentAboveLollipop(activity, alpha);
+            setTransparentAboveLollipop(activity, Color.TRANSPARENT);
+            showStatusBarView(activity, color);
+            autoFitsSystemWindows(activity, true);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTransparentAboveKitkat(activity);
-            showStatusBarView(activity, Color.argb(alpha, 0, 0, 0));
+            showStatusBarView(activity, color);
             AndroidBug5497Workaround.assistActivity(activity);
+            autoFitsSystemWindows(activity, false);
         }
-        autoFitsSystemWindows(activity, false);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private static void setTransparentWithInput(Activity activity, int alpha) {
+    private static void setTransparentWithInput(Activity activity, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setTransparentAboveKitkat(activity);
-            showStatusBarView(activity, Color.argb(alpha, 0, 0, 0));
+            showStatusBarView(activity, color);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTransparentAboveKitkat(activity);
-            showStatusBarView(activity, Color.argb(alpha, 0, 0, 0));
+            showStatusBarView(activity, color);
         }
         autoFitsSystemWindows(activity, false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -182,9 +187,9 @@ public class StatusBarPlus {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static void setTransparentAboveLollipop(Activity activity, int alpha) {
+    private static void setTransparentAboveLollipop(Activity activity, int color) {
         Window window = activity.getWindow();
-        window.setStatusBarColor(Color.argb(alpha, 0, 0, 0));
+        window.setStatusBarColor(color);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
@@ -290,9 +295,9 @@ public class StatusBarPlus {
         Window window = activity.getWindow();
         View decor = window.getDecorView();
         if (darkMode) {
-            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         } else {
-            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
     }
 

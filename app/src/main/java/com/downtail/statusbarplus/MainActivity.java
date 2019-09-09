@@ -1,5 +1,6 @@
 package com.downtail.statusbarplus;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,7 +15,9 @@ import com.downtail.plus.StatusBarPlus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import me.yokeyword.fragmentation_swipeback.SwipeBackActivity;
+
+public class MainActivity extends SwipeBackActivity {
 
     BottomNavigationView bottomNavigationView;
     ViewPager vpContainer;
@@ -25,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fakeView = findViewById(R.id.view_fake);
-        StatusBarPlus.setTransparent(this);
+        StatusBarPlus.setTransparent(this, Color.parseColor("#18ce94"));
+        StatusBarPlus.setStatusBarMode(this,true);
 
         vpContainer = findViewById(R.id.vp_container);
         vpContainer.setOffscreenPageLimit(4);
