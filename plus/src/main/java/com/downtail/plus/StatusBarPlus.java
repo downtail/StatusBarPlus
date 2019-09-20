@@ -160,7 +160,7 @@ public class StatusBarPlus {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setTransparentAboveLollipop(activity, Color.TRANSPARENT);
             showStatusBarView(activity, color);
-            autoFitsSystemWindows(activity, true);
+            autoFitsSystemWindows(activity, false);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTransparentAboveKitkat(activity);
             showStatusBarView(activity, color);

@@ -2,6 +2,7 @@ ext {
     dependencies = [
             v7                : "28.0.0",
             design            : "28.0.0",
-            smartRefreshLayout: "1.1.0"
+            smartRefreshLayout: "1.1.0",
+            fragmentation      : "1.3.7"
     ]
 }
