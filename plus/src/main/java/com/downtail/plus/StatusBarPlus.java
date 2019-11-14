@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -65,9 +66,25 @@ public class StatusBarPlus {
         autoFitsSystemWindows(activity, true);
     }
 
-    public static void setColor(View statusBarView, int color) {
-        statusBarView.getLayoutParams().height = getStatusBarHeight(statusBarView.getContext());
-        statusBarView.setBackgroundColor(color);
+    public static View setColor(View contentView, int color) {
+        if (contentView == null) {
+            throw new NullPointerException("contentView can't be null");
+        }
+        View statusBarView = contentView.findViewWithTag(STATUS_BAR_VIEW_TAG);
+        if (statusBarView == null) {
+            LinearLayout rootView = new LinearLayout(contentView.getContext());
+            rootView.setOrientation(LinearLayout.VERTICAL);
+            rootView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            statusBarView = new View(contentView.getContext());
+            statusBarView.setTag(STATUS_BAR_VIEW_TAG);
+            rootView.addView(statusBarView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(contentView.getContext())));
+            statusBarView.setBackgroundColor(color);
+            rootView.addView(contentView, rootView.getChildCount());
+            return rootView;
+        } else {
+            statusBarView.setBackgroundColor(color);
+            return contentView;
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -86,16 +103,16 @@ public class StatusBarPlus {
 
     private static void showStatusBarView(Activity activity, int color) {
         Window window = activity.getWindow();
-        ViewGroup decorView = activity.findViewById(android.R.id.content);
+        ViewGroup contentView = activity.findViewById(android.R.id.content);
 //        ViewGroup decorView = (ViewGroup) window.getDecorView();
-        View statusBarView = decorView.findViewWithTag(STATUS_BAR_VIEW_TAG);
+        View statusBarView = contentView.findViewWithTag(STATUS_BAR_VIEW_TAG);
         if (statusBarView == null) {
             statusBarView = new View(window.getContext());
             statusBarView.setTag(STATUS_BAR_VIEW_TAG);
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(window.getContext()));
             layoutParams.gravity = Gravity.TOP;
             statusBarView.setLayoutParams(layoutParams);
-            decorView.addView(statusBarView);
+            contentView.addView(statusBarView);
         }
         statusBarView.setBackgroundColor(color);
     }

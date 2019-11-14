@@ -16,7 +16,6 @@ import com.downtail.plus.StatusBarPlus;
 public class PageFragment extends Fragment {
 
     TextView tvBtn;
-    View statusView;
 
     public static PageFragment newInstance(int index) {
         Bundle args = new Bundle();
@@ -35,12 +34,18 @@ public class PageFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
-
-        tvBtn = view.findViewById(R.id.tv_btn);
-        statusView = view.findViewById(R.id.status_view);
-        StatusBarPlus.setColor(statusView, Color.YELLOW);
-
         int index = getArguments().getInt("index");
+
+        if (index == 0) {
+            view = StatusBarPlus.setColor(view, Color.YELLOW);
+        } else if (index == 1) {
+            view = StatusBarPlus.setColor(view, Color.parseColor("#18ce94"));
+        } else if (index == 2) {
+            view = StatusBarPlus.setColor(view, Color.parseColor("#ff0000"));
+        } else if (index == 3) {
+            view = StatusBarPlus.setColor(view, Color.parseColor("#61c1fe"));
+        }
+        tvBtn = view.findViewById(R.id.tv_btn);
         tvBtn.setText("click" + index);
         tvBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,18 +67,18 @@ public class PageFragment extends Fragment {
 //                StatusBarPlus.setStatusBarMode(this, false);
 //            }
             if (getActivity() != null) {
-                if (index == 0) {
-                    statusView.setVisibility(View.GONE);
-                } else if (index == 1) {
-                    statusView.setVisibility(View.VISIBLE);
-                    statusView.setBackgroundColor(Color.parseColor("#18ce94"));
-                } else if (index == 2) {
-                    statusView.setVisibility(View.VISIBLE);
-                    statusView.setBackgroundColor(Color.parseColor("#ff0000"));
-                } else if (index == 3) {
-                    statusView.setVisibility(View.VISIBLE);
-                    statusView.setBackgroundColor(Color.parseColor("#61c1fe"));
-                }
+//                if (index == 0) {
+//                    statusView.setVisibility(View.GONE);
+//                } else if (index == 1) {
+//                    statusView.setVisibility(View.VISIBLE);
+//                    statusView.setBackgroundColor(Color.parseColor("#18ce94"));
+//                } else if (index == 2) {
+//                    statusView.setVisibility(View.VISIBLE);
+//                    statusView.setBackgroundColor(Color.parseColor("#ff0000"));
+//                } else if (index == 3) {
+//                    statusView.setVisibility(View.VISIBLE);
+//                    statusView.setBackgroundColor(Color.parseColor("#61c1fe"));
+//                }
             }
         }
     }

@@ -28,7 +28,8 @@ public class MainActivity extends SwipeBackActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fakeView = findViewById(R.id.view_fake);
-        StatusBarPlus.setColor(this, Color.parseColor("#18ce94"));
+//        StatusBarPlus.setColor(this, Color.parseColor("#18ce94"));
+        StatusBarPlus.setTransparent(this);
         StatusBarPlus.setStatusBarMode(this,true);
 
         vpContainer = findViewById(R.id.vp_container);
